@@ -1,0 +1,36 @@
+server:
+  privateport: 3086
+  https:
+    cert:
+    key:
+  edition: local-ce:dev
+  loopinterval: 3
+  timeout: 120
+  debug: true
+log:
+  external: false
+  otelcollector:
+    host: otel-collector
+    port: 8095
+modelbackend:
+  host: model-backend
+  publicport: 8083
+  privateport: 3083
+  https:
+    cert:
+    key:
+mgmtbackend:
+  host: mgmt-backend
+  publicport: 8084
+  privateport: 3084
+  https:
+    cert:
+    key:
+tritonserver:
+  host: triton-server
+  grpcuri: triton-server:8001
+  modelstore: /model-repository
+etcd:
+  host: etcd
+  port: 2379
+  timeout: 10
