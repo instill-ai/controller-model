@@ -13,7 +13,7 @@ import (
 
 	"github.com/instill-ai/controller-model/pkg/service"
 
-	commonPB "github.com/instill-ai/protogen-go/common"
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
@@ -70,7 +70,7 @@ func TestGetResourceState(t *testing.T) {
 
 		resource, err := s.GetResourceState(ctx, serviceResourceName)
 
-		assert.Equal(t, commonPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED, resource.GetBackendState())
+		assert.Equal(t, healthcheckPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED, resource.GetBackendState())
 
 		assert.NoError(t, err)
 	})
@@ -137,7 +137,7 @@ func TestUpdateResourceState(t *testing.T) {
 		resource := controllerPB.Resource{
 			ResourcePermalink: serviceResourceName,
 			State: &controllerPB.Resource_BackendState{
-				BackendState: commonPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED,
+				BackendState: healthcheckPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED,
 			},
 		}
 

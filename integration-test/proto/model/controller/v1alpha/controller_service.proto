@@ -6,7 +6,6 @@ package model.controller.v1alpha;
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 
-import "../../../common/healthcheck.proto";
 import "../../../model/controller/v1alpha/controller.proto";
 
 // Controller service responds to incoming controller requests
@@ -14,7 +13,7 @@ service ControllerPrivateService {
   // Liveness method receives a LivenessRequest message and returns a
   // LivenessResponse message.
   // See https://github.com/grpc/grpc/blob/master/doc/health-checking.md
-  rpc Liveness(common.LivenessRequest) returns (common.LivenessResponse) {
+  rpc Liveness(LivenessRequest) returns (LivenessResponse) {
     option (google.api.http) = {
       get : "/v1alpha/__liveness"
       additional_bindings : [ {get : "/v1alpha/health/controller"} ]
@@ -24,7 +23,7 @@ service ControllerPrivateService {
   // Readiness method receives a ReadinessRequest message and returns a
   // ReadinessResponse message.
   // See https://github.com/grpc/grpc/blob/master/doc/health-checking.md
-  rpc Readiness(common.ReadinessRequest) returns (common.ReadinessResponse) {
+  rpc Readiness(ReadinessRequest) returns (ReadinessResponse) {
     option (google.api.http) = {
       get : "/v1alpha/__readiness"
     };

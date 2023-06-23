@@ -1,3 +1,5 @@
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+
 let proto
 let mHost, mgHost, ctHost, tHost
 let mPublicPort, mPrivatePort, mgPublicPort, mgPrivatePort, ctPrivatePort, tPublicPort
@@ -47,6 +49,6 @@ export const tritonPublicHost = `${proto}://${tHost}:${tPublicPort}`;
 
 export const controllerGRPCPrivateHost = `${ctHost}:${ctPrivatePort}`;
 
-export const modelResourcePermalink = "resources/00000000-00000000-00000000-00000000/types/models"
+export const modelResourcePermalink = `resources/${uuidv4()}/types/models`
 
-export const serviceResourcePermalink = "resources/00000000-00000000-00000000-00000000/types/services"
+export const serviceResourcePermalink = `resources/${uuidv4()}/types/services`

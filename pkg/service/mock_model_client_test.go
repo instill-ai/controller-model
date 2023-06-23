@@ -9,7 +9,6 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	common "github.com/instill-ai/protogen-go/common"
 	modelv1alpha "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	grpc "google.golang.org/grpc"
 )
@@ -238,14 +237,14 @@ func (mr *MockModelPublicServiceClientMockRecorder) ListModels(arg0, arg1 interf
 }
 
 // Liveness mocks base method.
-func (m *MockModelPublicServiceClient) Liveness(arg0 context.Context, arg1 *common.LivenessRequest, arg2 ...grpc.CallOption) (*common.LivenessResponse, error) {
+func (m *MockModelPublicServiceClient) Liveness(arg0 context.Context, arg1 *modelv1alpha.LivenessRequest, arg2 ...grpc.CallOption) (*modelv1alpha.LivenessResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Liveness", varargs...)
-	ret0, _ := ret[0].(*common.LivenessResponse)
+	ret0, _ := ret[0].(*modelv1alpha.LivenessResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -298,14 +297,14 @@ func (mr *MockModelPublicServiceClientMockRecorder) PublishModel(arg0, arg1 inte
 }
 
 // Readiness mocks base method.
-func (m *MockModelPublicServiceClient) Readiness(arg0 context.Context, arg1 *common.ReadinessRequest, arg2 ...grpc.CallOption) (*common.ReadinessResponse, error) {
+func (m *MockModelPublicServiceClient) Readiness(arg0 context.Context, arg1 *modelv1alpha.ReadinessRequest, arg2 ...grpc.CallOption) (*modelv1alpha.ReadinessResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Readiness", varargs...)
-	ret0, _ := ret[0].(*common.ReadinessResponse)
+	ret0, _ := ret[0].(*modelv1alpha.ReadinessResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/instill-ai/controller-model/pkg/service"
 
 	custom_otel "github.com/instill-ai/controller-model/pkg/logger/otel"
-	commonPB "github.com/instill-ai/protogen-go/common"
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 )
 
@@ -30,20 +30,20 @@ func NewPrivateHandler(s service.Service) controllerPB.ControllerPrivateServiceS
 var tracer = otel.Tracer("controller.private-handler.tracer")
 
 // Liveness checks the liveness of the server
-func (h *PrivateHandler) Liveness(ctx context.Context, in *commonPB.LivenessRequest) (*commonPB.LivenessResponse, error) {
-	return &commonPB.LivenessResponse{
-		HealthCheckResponse: &commonPB.HealthCheckResponse{
-			Status: commonPB.HealthCheckResponse_SERVING_STATUS_SERVING,
+func (h *PrivateHandler) Liveness(ctx context.Context, in *controllerPB.LivenessRequest) (*controllerPB.LivenessResponse, error) {
+	return &controllerPB.LivenessResponse{
+		HealthCheckResponse: &healthcheckPB.HealthCheckResponse{
+			Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING,
 		},
 	}, nil
 
 }
 
 // Readiness checks the readiness of the server
-func (h *PrivateHandler) Readiness(ctx context.Context, in *commonPB.ReadinessRequest) (*commonPB.ReadinessResponse, error) {
-	return &commonPB.ReadinessResponse{
-		HealthCheckResponse: &commonPB.HealthCheckResponse{
-			Status: commonPB.HealthCheckResponse_SERVING_STATUS_SERVING,
+func (h *PrivateHandler) Readiness(ctx context.Context, in *controllerPB.ReadinessRequest) (*controllerPB.ReadinessResponse, error) {
+	return &controllerPB.ReadinessResponse{
+		HealthCheckResponse: &healthcheckPB.HealthCheckResponse{
+			Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING,
 		},
 	}, nil
 }

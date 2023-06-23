@@ -18,7 +18,7 @@ import (
 
 	inferenceserver "github.com/instill-ai/controller-model/internal/triton"
 	mgmtPB "github.com/instill-ai/protogen-go/base/mgmt/v1alpha"
-	commonPB "github.com/instill-ai/protogen-go/common"
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
@@ -89,7 +89,7 @@ func (s *service) GetResourceState(ctx context.Context, resourcePermalink string
 		return &controllerPB.Resource{
 			ResourcePermalink: resourcePermalink,
 			State: &controllerPB.Resource_BackendState{
-				BackendState: commonPB.HealthCheckResponse_ServingStatus(stateEnumValue),
+				BackendState: healthcheckPB.HealthCheckResponse_ServingStatus(stateEnumValue),
 			},
 		}, nil
 	default:
@@ -179,8 +179,8 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 
 	var wg sync.WaitGroup
 
-	healthcheck := commonPB.HealthCheckResponse{
-		Status: commonPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED,
+	healthcheck := healthcheckPB.HealthCheckResponse{
+		Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED,
 	}
 
 	var backendServices = [...]string{
@@ -197,21 +197,21 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 
 			switch hostname {
 			case config.Config.ModelBackend.Host:
-				resp, err := s.modelPublicClient.Liveness(ctx, &commonPB.LivenessRequest{})
+				resp, err := s.modelPublicClient.Liveness(ctx, &modelPB.LivenessRequest{})
 
 				if err != nil {
-					healthcheck = commonPB.HealthCheckResponse{
-						Status: commonPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
+					healthcheck = healthcheckPB.HealthCheckResponse{
+						Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
 					}
 				} else {
 					healthcheck = *resp.GetHealthCheckResponse()
 				}
 			case config.Config.MgmtBackend.Host:
-				resp, err := s.mgmtPublicClient.Liveness(ctx, &commonPB.LivenessRequest{})
+				resp, err := s.mgmtPublicClient.Liveness(ctx, &mgmtPB.LivenessRequest{})
 
 				if err != nil {
-					healthcheck = commonPB.HealthCheckResponse{
-						Status: commonPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
+					healthcheck = healthcheckPB.HealthCheckResponse{
+						Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
 					}
 				} else {
 					healthcheck = *resp.GetHealthCheckResponse()
@@ -220,17 +220,17 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 				resp, err := s.tritonClient.ServerLive(ctx, &inferenceserver.ServerLiveRequest{})
 
 				if err != nil {
-					healthcheck = commonPB.HealthCheckResponse{
-						Status: commonPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
+					healthcheck = healthcheckPB.HealthCheckResponse{
+						Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
 					}
 				} else {
 					if resp.GetLive() {
-						healthcheck = commonPB.HealthCheckResponse{
-							Status: commonPB.HealthCheckResponse_SERVING_STATUS_SERVING,
+						healthcheck = healthcheckPB.HealthCheckResponse{
+							Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING,
 						}
 					} else {
-						healthcheck = commonPB.HealthCheckResponse{
-							Status: commonPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
+						healthcheck = healthcheckPB.HealthCheckResponse{
+							Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
 						}
 					}
 				}
