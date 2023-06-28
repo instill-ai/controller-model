@@ -230,9 +230,8 @@ func main() {
 				time.Sleep(50 * time.Millisecond)
 			}
 
-			mainWG.Add(3)
-
 			// Backend services
+			mainWG.Add(1)
 			go func() {
 				defer mainWG.Done()
 				if err := service.ProbeBackend(context.WithTimeout(ctx, config.Config.Server.Timeout*time.Second)); err != nil {
@@ -241,6 +240,7 @@ func main() {
 			}()
 
 			// Models
+			mainWG.Add(1)
 			go func() {
 				defer mainWG.Done()
 				if err := service.ProbeModels(context.WithTimeout(ctx, config.Config.Server.Timeout*time.Second)); err != nil {
