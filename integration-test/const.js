@@ -1,12 +1,8 @@
 import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 let proto
-let mHost, mgHost, ctHost, tHost
-let mPublicPort, mPrivatePort, mgPublicPort, mgPrivatePort, ctPrivatePort, tPublicPort
-
-if (__ENV.API_GATEWAY_MODEL_HOST && !__ENV.API_GATEWAY_MODEL_PORT || !__ENV.API_GATEWAY_MODEL_HOST && __ENV.API_GATEWAY_MODEL_PORT) {
-  fail("both API_GATEWAY_MODEL_HOST and API_GATEWAY_MODEL_PORT should be properly configured.")
-}
+let mHost, ctHost, tHost
+let mPublicPort, mPrivatePort, ctPrivatePort, tPublicPort
 
 export const apiGatewayMode = (__ENV.API_GATEWAY_MODEL_HOST && __ENV.API_GATEWAY_MODEL_PORT);
 
@@ -24,7 +20,7 @@ if (apiGatewayMode) {
   mHost = ctHost = tHost = __ENV.API_GATEWAY_MODEL_HOST
   mPrivatePort = 3083
   ctPrivatePort = 3086
-  mPublicPort = mgPublicPort = tPublicPort = 8080
+  mPublicPort = tPublicPort = __ENV.API_GATEWAY_MODEL_PORT
 } else {
   // direct microservice mode
   mHost = "model-backend"
