@@ -53,8 +53,12 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			defer wg.Done()
 
 			resourcePermalink := util.ConvertUIDToResourcePermalink(model.Uid, resourceType)
+			modelPermalink := fmt.Sprintf("%s/%s", "models", model.Uid)
 
 			workflowID, _ := s.GetResourceWorkflowID(ctx, resourcePermalink)
+
+			var currentState modelPB.Model_State
+			var desireState modelPB.Model_State
 
 			if workflowID != nil {
 				opInfo, err := s.getOperationInfo(*workflowID, util.RESOURCE_TYPE_MODEL)
@@ -69,8 +73,8 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 					}
 				}
 			} else {
-				if resp, err := s.modelPrivateClient.CheckModel(ctx, &modelPB.CheckModelRequest{
-					ModelPermalink: fmt.Sprintf("%s/%s", resourceType, model.Uid),
+				if resp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
+					ModelPermalink: modelPermalink,
 				}); err == nil {
 					if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
 						ResourcePermalink: resourcePermalink,
@@ -89,6 +93,15 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 
 			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
 			logger.Info(fmt.Sprintf("[Controller] Got %v", logResp))
+
+			currentState = logResp.GetModelState()
+			desireState = model.State
+
+			if err = s.moveCurrentStateToDesireState(ctx, modelPermalink, currentState, desireState); err != nil {
+				logger.Error(err.Error())
+				return
+			}
+
 		}(model)
 
 	}
@@ -96,4 +109,28 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 	wg.Wait()
 
 	return nil
+}
+
+func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermalink string, currentState modelPB.Model_State, desireState modelPB.Model_State) (err error) {
+	logger, _ := logger.GetZapLogger(ctx)
+
+	switch desireState {
+	case modelPB.Model_STATE_ONLINE:
+		switch currentState {
+		case modelPB.Model_STATE_OFFLINE:
+			_, err = s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
+				ModelPermalink: modelPermalink,
+			})
+			logger.Info("[Controller] Trying to move model state to desire state")
+		}
+	case modelPB.Model_STATE_OFFLINE:
+		switch currentState {
+		case modelPB.Model_STATE_ONLINE:
+			_, err = s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
+				ModelPermalink: modelPermalink,
+			})
+			logger.Info("[Controller] Trying to move model state to desire state")
+		}
+	}
+	return err
 }
