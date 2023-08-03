@@ -237,6 +237,9 @@ func main() {
 			time.Sleep(1 * time.Second)
 		}
 
+		// Workaround, wait the http server fully ready
+		time.Sleep(10 * time.Second)
+
 		logger.Info("[controller] control loop started")
 		var mainWG sync.WaitGroup
 		for {
