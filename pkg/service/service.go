@@ -66,13 +66,31 @@ func (s *service) GetResourceState(ctx context.Context, resourcePermalink string
 		return nil, err
 	}
 
+	resourceType := strings.SplitN(resourcePermalink, "/", 4)[3]
+
 	kvs := resp.Kvs
 
 	if len(kvs) == 0 {
-		return nil, fmt.Errorf(fmt.Sprintf("resource %v not found in etcd storage", resourcePermalink))
+		switch resourceType {
+		case util.RESOURCE_TYPE_MODEL:
+			return &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_ModelState{
+					ModelState: modelPB.Model_STATE_UNSPECIFIED,
+				},
+				Progress: nil,
+			}, nil
+		case util.RESOURCE_TYPE_SERVICE:
+			return &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_BackendState{
+					BackendState: healthcheckPB.HealthCheckResponse_SERVING_STATUS_UNSPECIFIED,
+				},
+			}, nil
+		default:
+			return nil, fmt.Errorf(fmt.Sprintf("get resource type %s not implemented", resourceType))
+		}
 	}
-
-	resourceType := strings.SplitN(resourcePermalink, "/", 4)[3]
 
 	stateEnumValue, _ := strconv.ParseInt(string(kvs[0].Value[:]), 10, 32)
 

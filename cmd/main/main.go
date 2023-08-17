@@ -224,21 +224,7 @@ func main() {
 	}
 	defer clientConn.Close()
 
-	controllerClient := controllerPB.NewControllerPrivateServiceClient(clientConn)
-
 	go func() {
-
-		for {
-			resp, err := controllerClient.Readiness(context.Background(), &controllerPB.ReadinessRequest{})
-			logger.Info(fmt.Sprintf("readiness %s", resp))
-			if err == nil {
-				break
-			}
-			time.Sleep(1 * time.Second)
-		}
-
-		// Workaround, wait the http server fully ready
-		time.Sleep(10 * time.Second)
 
 		logger.Info("[controller] control loop started")
 		var mainWG sync.WaitGroup
