@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/instill-ai/controller-model/internal/util"
@@ -71,24 +72,38 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 						logger.Error(err.Error())
 						return
 					}
-				}
-			} else {
-				if resp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
-					ModelPermalink: modelPermalink,
-				}); err == nil {
-					if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
-						ResourcePermalink: resourcePermalink,
-						State: &controllerPB.Resource_ModelState{
-							ModelState: resp.State,
-						},
-					}); err != nil {
-						logger.Error(err.Error())
+					if opInfo.GetError() != nil {
+						if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+							ResourcePermalink: resourcePermalink,
+							State: &controllerPB.Resource_ModelState{
+								ModelState: modelPB.Model_STATE_ERROR,
+							},
+						}); err != nil {
+							logger.Error(err.Error())
+						}
 						return
 					}
 				} else {
+					logResp, _ := s.GetResourceState(ctx, resourcePermalink)
+					logger.Info(fmt.Sprintf("[Controller] Got %v", logResp))
+					return
+				}
+			}
+			if resp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
+				ModelPermalink: modelPermalink,
+			}); err == nil {
+				if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: resp.State,
+					},
+				}); err != nil {
 					logger.Error(err.Error())
 					return
 				}
+			} else {
+				logger.Error(err.Error())
+				return
 			}
 
 			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
@@ -97,7 +112,7 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			currentState = logResp.GetModelState()
 			desireState = model.State
 
-			if err = s.moveCurrentStateToDesireState(ctx, modelPermalink, currentState, desireState); err != nil {
+			if err = s.moveCurrentStateToDesireState(ctx, modelPermalink, resourcePermalink, currentState, desireState); err != nil {
 				logger.Error(err.Error())
 				return
 			}
@@ -111,25 +126,69 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 	return nil
 }
 
-func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermalink string, currentState modelPB.Model_State, desireState modelPB.Model_State) (err error) {
+func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermalink string, resourcePermalink string, currentState modelPB.Model_State, desireState modelPB.Model_State) (err error) {
 	logger, _ := logger.GetZapLogger(ctx)
 
 	switch desireState {
 	case modelPB.Model_STATE_ONLINE:
 		switch currentState {
 		case modelPB.Model_STATE_OFFLINE:
-			_, err = s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
+			logger.Info("[Controller] Trying to move model state to desire state")
+			resp, err := s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
-			logger.Info("[Controller] Trying to move model state to desire state")
+			if err != nil {
+				if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: modelPB.Model_STATE_ERROR,
+					},
+				}); err != nil {
+					return err
+				}
+				return err
+			}
+			if err = s.UpdateResourceWorkflowID(ctx, resourcePermalink, strings.Split(resp.GetOperation().GetName(), "/")[1]); err != nil {
+				return err
+			}
+			if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_ModelState{
+					ModelState: modelPB.Model_STATE_UNSPECIFIED,
+				},
+			}); err != nil {
+				return err
+			}
 		}
 	case modelPB.Model_STATE_OFFLINE:
 		switch currentState {
 		case modelPB.Model_STATE_ONLINE:
-			_, err = s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
+			logger.Info("[Controller] Trying to move model state to desire state")
+			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
-			logger.Info("[Controller] Trying to move model state to desire state")
+			if err != nil {
+				if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: modelPB.Model_STATE_ERROR,
+					},
+				}); err != nil {
+					return err
+				}
+				return err
+			}
+			if err = s.UpdateResourceWorkflowID(ctx, resourcePermalink, strings.Split(resp.GetOperation().GetName(), "/")[1]); err != nil {
+				return err
+			}
+			if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_ModelState{
+					ModelState: modelPB.Model_STATE_UNSPECIFIED,
+				},
+			}); err != nil {
+				return err
+			}
 		}
 	}
 	return err
