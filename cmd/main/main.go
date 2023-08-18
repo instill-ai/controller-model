@@ -217,13 +217,6 @@ func main() {
 	span.End()
 	logger.Info("gRPC server is running.")
 
-	clientDialOpts := grpc.WithTransportCredentials(insecure.NewCredentials())
-	clientConn, err := grpc.Dial(fmt.Sprintf("%v:%v", "127.0.0.1", config.Config.Server.Port), clientDialOpts)
-	if err != nil {
-		panic(err)
-	}
-	defer clientConn.Close()
-
 	go func() {
 
 		logger.Info("[controller] control loop started")
