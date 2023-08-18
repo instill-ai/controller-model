@@ -13,6 +13,13 @@ import (
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
 
+type ReconcileModel struct {
+	ModelPermalink    string
+	ResourcePermalink string
+	CurrentState      modelPB.Model_State
+	DesireState       modelPB.Model_State
+}
+
 func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) error {
 	defer cancel()
 
@@ -46,10 +53,10 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 
 	resourceType := "models"
 
-	wg.Add(len(models))
+	reconcileModelChannel := make(chan ReconcileModel, len(models))
 
 	for _, model := range models {
-
+		wg.Add(1)
 		go func(model *modelPB.Model) {
 			defer wg.Done()
 
@@ -112,16 +119,39 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			currentState = logResp.GetModelState()
 			desireState = model.State
 
-			if err = s.moveCurrentStateToDesireState(ctx, modelPermalink, resourcePermalink, currentState, desireState); err != nil {
-				logger.Error(err.Error())
-				return
+			rModel := ReconcileModel{
+				ModelPermalink:    modelPermalink,
+				ResourcePermalink: resourcePermalink,
+				CurrentState:      currentState,
+				DesireState:       desireState,
 			}
+
+			reconcileModelChannel <- rModel
 
 		}(model)
 
 	}
 
 	wg.Wait()
+
+	for i := 0; i < len(models); i++ {
+		select {
+		case rModel := <-reconcileModelChannel:
+			if err = s.moveCurrentStateToDesireState(
+				ctx,
+				rModel.ModelPermalink,
+				rModel.ResourcePermalink,
+				rModel.CurrentState,
+				rModel.DesireState,
+			); err != nil {
+				logger.Error(err.Error())
+			}
+		default:
+			logger.Info("channel empty")
+		}
+	}
+
+	close(reconcileModelChannel)
 
 	return nil
 }
