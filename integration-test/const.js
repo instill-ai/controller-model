@@ -1,10 +1,8 @@
 import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 let proto
-let mHost, ctHost, tHost
-let mPublicPort, mPrivatePort, ctPrivatePort, tPublicPort
 
-export const apiGatewayMode = (__ENV.API_GATEWAY_MODEL_HOST && __ENV.API_GATEWAY_MODEL_PORT);
+export const apiGatewayMode = (__ENV.API_GATEWAY_URL && true)
 
 if (__ENV.API_GATEWAY_PROTOCOL) {
   if (__ENV.API_GATEWAY_PROTOCOL !== "http" && __ENV.API_GATEWAY_PROTOCOL != "https") {
@@ -15,29 +13,7 @@ if (__ENV.API_GATEWAY_PROTOCOL) {
   proto = "http"
 }
 
-if (apiGatewayMode) {
-  // api-gateway mode
-  mHost = ctHost = tHost = __ENV.API_GATEWAY_MODEL_HOST
-  mPrivatePort = 3083
-  ctPrivatePort = 3086
-  mPublicPort = tPublicPort = __ENV.API_GATEWAY_MODEL_PORT
-} else {
-  // direct microservice mode
-  mHost = "model-backend"
-  ctHost = "controller-model"
-  tHost = "triton-server"
-  mPrivatePort = 3083
-  ctPrivatePort = 3086
-  mPublicPort = 8083
-  tPublicPort = 8001
-}
-
-export const modelPublicHost = `${proto}://${mHost}:${mPublicPort}`;
-export const modelPrivateHost = `${proto}://${mHost}:${mPrivatePort}`;
-export const controllerPrivateHost = `${proto}://${ctHost}:${ctPrivatePort}`;
-export const tritonPublicHost = `${proto}://${tHost}:${tPublicPort}`;
-
-export const controllerGRPCPrivateHost = `${ctHost}:${ctPrivatePort}`;
+export const controllerGRPCPrivateHost = "controller-model:3086"
 
 export const modelResourcePermalink = `resources/${uuidv4()}/types/models`
 
