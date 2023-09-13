@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.1-alpha...v0.2.2-alpha) (2023-09-13)
+
+
+### Miscellaneous Chores
+
+* **release:** release v0.2.2-alpha ([32d554c](https://github.com/instill-ai/controller-model/commit/32d554c5b90190080a0f2f6203dbfc0a4b4fe812))
+
 ## [0.2.1-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.0-alpha...v0.2.1-alpha) (2023-08-19)
 
 
