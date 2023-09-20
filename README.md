@@ -59,6 +59,11 @@ $ make stop
 
 The latest images will be published to Docker Hub [repository](https://hub.docker.com/r/instill/controller-model) at release.
 
+## Contributing
+
+Please refer to the [Contributing Guidelines](https://github.com/instill-ai/model/blob/main/.github/CONTRIBUTING.md) for more details.
+
+
 ## License
 
 See the [LICENSE](./LICENSE) file for licensing information.
