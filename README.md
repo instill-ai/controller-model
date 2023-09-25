@@ -4,57 +4,6 @@
 
 `controller-model` service monitors the state of other services and resources within Instill Model.
 
-## Local dev
-
-On the local machine, clone `model` repository in your workspace, move to the repository folder, and launch all dependent microservices:
-```bash
-$ cd <your-workspace>
-$ git clone https://github.com/instill-ai/model.git
-$ cd model
-$ make latest PROFILE=controller
-```
-
-Clone `controller-model` repository in your workspace and move to the repository folder:
-```bash
-$ cd <your-workspace>
-$ git clone https://github.com/instill-ai/controller-model.git
-$ cd controller-model
-```
-
-### Build the dev image
-
-```bash
-$ make build
-```
-
-### Run the dev container
-
-```bash
-$ make dev
-```
-
-Now, you have the Go project set up in the container, in which you can compile and run the binaries together with the integration test in each container shell.
-
-### Run the server
-
-```bash
-$ docker exec -it controller-model /bin/bash
-$ go run ./cmd/main
-```
-
-### Run the integration test
-
-```bash
-$ docker exec -it controller-model /bin/bash
-$ make integration-test
-```
-
-### Stop the dev container
-
-```bash
-$ make stop
-```
-
 ### CI/CD
 
 The latest images will be published to Docker Hub [repository](https://hub.docker.com/r/instill/controller-model) at release.
@@ -63,6 +12,9 @@ The latest images will be published to Docker Hub [repository](https://hub.docke
 
 Please refer to the [Contributing Guidelines](./.github/CONTRIBUTING.md) for more details.
 
+## Community
+
+Please refer to the [community](https://github.com/instill-ai/community) repository.
 
 ## License
 
