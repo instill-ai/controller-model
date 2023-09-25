@@ -75,7 +75,7 @@ $ make integration-test
 $ make stop
 ```
 
-#### Run test
+### Run test
 
 ```
 go test -race ./... -covermode=atomic

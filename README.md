@@ -4,7 +4,7 @@
 
 `controller-model` service monitors the state of other services and resources within Instill Model.
 
-### CI/CD
+## CI/CD
 
 The latest images will be published to Docker Hub [repository](https://hub.docker.com/r/instill/controller-model) at release.
 
