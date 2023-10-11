@@ -254,21 +254,19 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 				}
 			}
 
-			err := s.UpdateResourceState(ctx, &controllerPB.Resource{
+			if healthcheck.Status == healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING {
+				logger.Info(fmt.Sprintf("[Controller] %v: %v", hostname, healthcheck.Status))
+			}
+
+			if err := s.UpdateResourceState(ctx, &controllerPB.Resource{
 				ResourcePermalink: util.ConvertServiceToResourceName(hostname),
 				State: &controllerPB.Resource_BackendState{
 					BackendState: healthcheck.Status,
 				},
-			})
-
-			if err != nil {
+			}); err != nil {
 				logger.Error(err.Error())
 				return
 			}
-
-			resp, _ := s.GetResourceState(ctx, util.ConvertServiceToResourceName(hostname))
-
-			logger.Info(fmt.Sprintf("[Controller] Got %v", resp))
 		}(hostname)
 	}
 
