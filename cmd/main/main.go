@@ -112,11 +112,8 @@ func main() {
 		grpc_zap.WithDecider(func(fullMethodName string, err error) bool {
 			// will not log gRPC calls if it was a call to liveness or readiness and no error was raised
 			if err == nil {
-				if match, _ := regexp.MatchString("model.controller.v1alpha.ControllerPrivateService/.*ness$", fullMethodName); match {
-					return false
-				}
 				// stop logging successful private function calls
-				if match, _ := regexp.MatchString("model.model.v1alpha.ModelPrivateService/.*Admin$", fullMethodName); match {
+				if match, _ := regexp.MatchString("model.controller.v1alpha.ControllerPrivateService/.*", fullMethodName); match {
 					return false
 				}
 			}

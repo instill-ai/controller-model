@@ -110,6 +110,12 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 
 			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
 			currentState = logResp.GetModelState()
+
+			if currentState == modelPB.Model_STATE_ERROR{
+				logger.Warn(fmt.Sprintf("[Controller] %s: %v", model.Id, currentState))
+				return
+			}
+
 			desireState = model.State
 
 			rModel := ReconcileModel{
