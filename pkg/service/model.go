@@ -77,7 +77,6 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				if opInfo.Done {
 					if err := s.DeleteResourceWorkflowID(ctx, resourcePermalink); err != nil {
 						logger.Error(err.Error())
-						return
 					}
 					if opInfo.GetError() != nil {
 						if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
@@ -88,11 +87,7 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 						}); err != nil {
 							logger.Error(err.Error())
 						}
-						return
 					}
-				} else {
-					logResp, _ := s.GetResourceState(ctx, resourcePermalink)
-					logger.Info(fmt.Sprintf("[Controller] Got %v", logResp))
 					return
 				}
 			}
@@ -114,8 +109,6 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			}
 
 			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
-			logger.Info(fmt.Sprintf("[Controller] Got %v", logResp))
-
 			currentState = logResp.GetModelState()
 			desireState = model.State
 
@@ -163,7 +156,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_ONLINE:
 		switch currentState {
 		case modelPB.Model_STATE_OFFLINE:
-			logger.Info("[Controller] Trying to move model state to desire state")
+			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -193,7 +186,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_OFFLINE:
 		switch currentState {
 		case modelPB.Model_STATE_ONLINE:
-			logger.Info("[Controller] Trying to move model state to desire state")
+			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
