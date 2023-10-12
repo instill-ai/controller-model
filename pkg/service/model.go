@@ -88,8 +88,8 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 							logger.Error(err.Error())
 						}
 					}
-					return
 				}
+				return
 			}
 			if resp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
 				ModelPermalink: modelPermalink,
@@ -111,7 +111,7 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
 			currentState = logResp.GetModelState()
 
-			if currentState == modelPB.Model_STATE_ERROR{
+			if currentState == modelPB.Model_STATE_ERROR {
 				logger.Warn(fmt.Sprintf("[Controller] %s: %v", model.Id, currentState))
 				return
 			}
