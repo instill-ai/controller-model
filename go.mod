@@ -1,6 +1,6 @@
 module github.com/instill-ai/controller-model
 
-go 1.19
+go 1.21
 
 require (
 	cloud.google.com/go/longrunning v0.4.1
