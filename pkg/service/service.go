@@ -17,7 +17,7 @@ import (
 	"github.com/instill-ai/controller-model/pkg/logger"
 
 	inferenceserver "github.com/instill-ai/controller-model/internal/triton"
-	mgmtPB "github.com/instill-ai/protogen-go/base/mgmt/v1alpha"
+	mgmtPB "github.com/instill-ai/protogen-go/core/mgmt/v1alpha"
 	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
