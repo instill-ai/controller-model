@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.5-alpha...v0.2.6-alpha) (2023-11-08)
+
+
+### Bug Fixes
+
+* **service:** fix endless retry in state error ([#24](https://github.com/instill-ai/controller-model/issues/24)) ([cebe035](https://github.com/instill-ai/controller-model/commit/cebe03505e5367d5a034639604e7b5b6c0c52de5))
+
 ## [0.2.5-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.4-alpha...v0.2.5-alpha) (2023-10-27)
 
 
