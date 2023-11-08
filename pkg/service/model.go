@@ -68,6 +68,14 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			var currentState modelPB.Model_State
 			var desireState modelPB.Model_State
 
+			curResp, _ := s.GetResourceState(ctx, resourcePermalink)
+			currentState = curResp.GetModelState()
+
+			if currentState == modelPB.Model_STATE_ERROR {
+				logger.Warn(fmt.Sprintf("[Controller] %s: %v", model.Name, currentState))
+				return
+			}
+
 			if workflowID != nil {
 				opInfo, err := s.getOperationInfo(*workflowID, util.RESOURCE_TYPE_MODEL)
 				if err != nil {
@@ -108,14 +116,6 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				return
 			}
 
-			logResp, _ := s.GetResourceState(ctx, resourcePermalink)
-			currentState = logResp.GetModelState()
-
-			if currentState == modelPB.Model_STATE_ERROR {
-				logger.Warn(fmt.Sprintf("[Controller] %s: %v", model.Id, currentState))
-				return
-			}
-
 			desireState = model.State
 
 			rModel := ReconcileModel{
@@ -146,7 +146,7 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				logger.Error(err.Error())
 			}
 		default:
-			logger.Info("channel empty")
+			logger.Info(fmt.Sprintf("[Controller] %v not in a valid state for operation", models[i].Name))
 		}
 	}
 
