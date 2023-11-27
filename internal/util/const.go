@@ -8,4 +8,4 @@ const (
 	RESOURCE_TYPE_SERVICE               = "services"
 )
 
-const DefaultPageSize = int32(100)
+const DefaultPageSize = int32(10)
