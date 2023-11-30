@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.7-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.6-alpha...v0.2.7-alpha) (2023-11-30)
+
+
+### Bug Fixes
+
+* **model:** fix list model page size ([#26](https://github.com/instill-ai/controller-model/issues/26)) ([ae37824](https://github.com/instill-ai/controller-model/commit/ae378241fc6b5f28822c9753b58a299d5ba4967b))
+* **model:** fix model deployment reconciliation ([#28](https://github.com/instill-ai/controller-model/issues/28)) ([1eb7c24](https://github.com/instill-ai/controller-model/commit/1eb7c24821f949b0954f3644b3d6e18ba799f7d7))
+
 ## [0.2.6-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.5-alpha...v0.2.6-alpha) (2023-11-08)
 
 
