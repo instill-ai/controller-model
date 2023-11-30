@@ -130,11 +130,10 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 					return
 				}
 				logger.Warn(err.Error())
-				return
-			}
-
-			if lastProbeState == modelPB.Model_STATE_ERROR {
-				logger.Warn(fmt.Sprintf("[Controller] %s last op errored, trigger retry", model.Name))
+			} else {
+				if lastProbeState == modelPB.Model_STATE_ERROR {
+					logger.Warn(fmt.Sprintf("[Controller] %s last op errored, trigger retry", model.Name))
+				}
 			}
 
 			rModel := ReconcileModel{
@@ -181,7 +180,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_ONLINE:
 		switch currentState {
 		case modelPB.Model_STATE_OFFLINE:
-			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
+			logger.Info(fmt.Sprintf("[Controller] moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -211,7 +210,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_OFFLINE:
 		switch currentState {
 		case modelPB.Model_STATE_ONLINE:
-			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
+			logger.Info(fmt.Sprintf("[Controller] moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -247,7 +246,7 @@ func (s *service) checkRetry(ctx context.Context, resourcePermalink string) erro
 	if retryCount, err := s.GetResourceRetryCount(ctx, resourcePermalink); err != nil {
 		return err
 	} else if *retryCount >= util.DefaultRetryCount {
-		return fmt.Errorf(fmt.Sprintf("[Controller] Retry limit reached for %s", resourcePermalink))
+		return fmt.Errorf(fmt.Sprintf("[Controller] retry limit reached for %s", resourcePermalink))
 	} else {
 		if err = s.UpdateResourceRetryCount(ctx, resourcePermalink, *retryCount+int64(1)); err != nil {
 			return err
