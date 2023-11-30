@@ -8,4 +8,7 @@ const (
 	RESOURCE_TYPE_SERVICE               = "services"
 )
 
-const DefaultPageSize = int32(10)
+const (
+	DefaultPageSize   = int32(10)
+	DefaultRetryCount = int64(3)
+)

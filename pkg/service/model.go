@@ -63,18 +63,8 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 			resourcePermalink := util.ConvertUIDToResourcePermalink(model.Uid, resourceType)
 			modelPermalink := fmt.Sprintf("%s/%s", "models", model.Uid)
 
+			// model in transition state
 			workflowID, _ := s.GetResourceWorkflowID(ctx, resourcePermalink)
-
-			var currentState modelPB.Model_State
-			var desireState modelPB.Model_State
-
-			curResp, _ := s.GetResourceState(ctx, resourcePermalink)
-			currentState = curResp.GetModelState()
-
-			if currentState == modelPB.Model_STATE_ERROR {
-				logger.Warn(fmt.Sprintf("[Controller] %s: %v", model.Name, currentState))
-				return
-			}
 
 			if workflowID != nil {
 				opInfo, err := s.getOperationInfo(*workflowID, util.RESOURCE_TYPE_MODEL)
@@ -99,24 +89,53 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				}
 				return
 			}
-			if resp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
+
+			// model in end state
+			lastResp, _ := s.GetResourceState(ctx, resourcePermalink)
+			curResp, err := s.modelPrivateClient.CheckModelAdmin(ctx, &modelPB.CheckModelAdminRequest{
 				ModelPermalink: modelPermalink,
-			}); err == nil {
-				if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
-					ResourcePermalink: resourcePermalink,
-					State: &controllerPB.Resource_ModelState{
-						ModelState: resp.State,
-					},
-				}); err != nil {
-					logger.Error(err.Error())
-					return
-				}
-			} else {
+			})
+			if err != nil {
 				logger.Error(err.Error())
 				return
 			}
 
-			desireState = model.State
+			lastProbeState := lastResp.GetModelState()
+			currentState := curResp.GetState()
+			desireState := model.State
+
+			if currentState != modelPB.Model_STATE_ERROR && lastProbeState != modelPB.Model_STATE_ERROR {
+				if err = s.UpdateResourceRetryCount(ctx, resourcePermalink, 0); err != nil {
+					return
+				}
+			}
+
+			if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_ModelState{
+					ModelState: currentState,
+				},
+			}); err != nil {
+				logger.Error(err.Error())
+				return
+			}
+
+			if err := s.checkRetry(ctx, resourcePermalink); err != nil {
+				if e := s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: modelPB.Model_STATE_ERROR,
+					},
+				}); e != nil {
+					return
+				}
+				currentState = lastProbeState
+				logger.Warn(err.Error())
+			} else {
+				if lastProbeState == modelPB.Model_STATE_ERROR {
+					logger.Warn(fmt.Sprintf("[Controller] %s last op errored, trigger retry", model.Name))
+				}
+			}
 
 			rModel := ReconcileModel{
 				ModelPermalink:    modelPermalink,
@@ -162,7 +181,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_ONLINE:
 		switch currentState {
 		case modelPB.Model_STATE_OFFLINE:
-			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
+			logger.Info(fmt.Sprintf("[Controller] moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -192,7 +211,7 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 	case modelPB.Model_STATE_OFFLINE:
 		switch currentState {
 		case modelPB.Model_STATE_ONLINE:
-			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
+			logger.Info(fmt.Sprintf("[Controller] moving %v from %v to %v", modelPermalink, currentState, desireState))
 			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -221,4 +240,18 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 		}
 	}
 	return err
+}
+
+func (s *service) checkRetry(ctx context.Context, resourcePermalink string) error {
+	// check retry count
+	if retryCount, err := s.GetResourceRetryCount(ctx, resourcePermalink); err != nil {
+		return err
+	} else if *retryCount >= util.DefaultRetryCount {
+		return fmt.Errorf(fmt.Sprintf("[Controller] retry limit reached for %s", resourcePermalink))
+	} else {
+		if err = s.UpdateResourceRetryCount(ctx, resourcePermalink, *retryCount+int64(1)); err != nil {
+			return err
+		}
+	}
+	return nil
 }

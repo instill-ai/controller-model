@@ -16,6 +16,12 @@ func ConvertServiceToResourceName(serviceName string) string {
 	return resourceName
 }
 
+func ConvertResourcePermalinkToResourceRetryName(resourcePermalink string) string {
+	resourceWorkflowId := fmt.Sprintf("%s/retry", resourcePermalink)
+
+	return resourceWorkflowId
+}
+
 func ConvertResourcePermalinkToWorkflowName(resourcePermalink string) string {
 	resourceWorkflowId := fmt.Sprintf("%s/workflow", resourcePermalink)
 

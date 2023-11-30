@@ -20,6 +20,7 @@ import (
 
 const serviceResourceName = "resources/name/types/services"
 const modelResourceName = "resources/name/types/models"
+const modelResourceRetryName = "resources/name/types/models/retry"
 
 type Client struct {
 	etcdv3.Cluster
@@ -255,6 +256,11 @@ func TestDeleteResourceState(t *testing.T) {
 		mockKV.
 			EXPECT().
 			Delete(ctx, modelResourceName).
+			Return(resp, nil).
+			Times(1)
+		mockKV.
+			EXPECT().
+			Delete(ctx, modelResourceRetryName).
 			Return(resp, nil).
 			Times(1)
 

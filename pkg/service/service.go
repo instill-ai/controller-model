@@ -17,8 +17,8 @@ import (
 	"github.com/instill-ai/controller-model/pkg/logger"
 
 	inferenceserver "github.com/instill-ai/controller-model/internal/triton"
-	mgmtPB "github.com/instill-ai/protogen-go/core/mgmt/v1alpha"
 	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
+	mgmtPB "github.com/instill-ai/protogen-go/core/mgmt/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
@@ -28,6 +28,8 @@ type Service interface {
 	GetResourceState(ctx context.Context, resourcePermalink string) (*controllerPB.Resource, error)
 	UpdateResourceState(ctx context.Context, resource *controllerPB.Resource) error
 	DeleteResourceState(ctx context.Context, resourcePermalink string) error
+	GetResourceRetryCount(ctx context.Context, resourcePermalink string) (*int64, error)
+	UpdateResourceRetryCount(ctx context.Context, resourcePermalink string, retryCount int64) error
 	GetResourceWorkflowID(ctx context.Context, resourcePermalink string) (*string, error)
 	UpdateResourceWorkflowID(ctx context.Context, resourcePermalink string, workflowID string) error
 	DeleteResourceWorkflowID(ctx context.Context, resourcePermalink string) error
@@ -137,7 +139,48 @@ func (s *service) UpdateResourceState(ctx context.Context, resource *controllerP
 }
 
 func (s *service) DeleteResourceState(ctx context.Context, resourcePermalink string) error {
+	resourceType := strings.SplitN(resourcePermalink, "/", 4)[3]
+
+	if resourceType == util.RESOURCE_TYPE_MODEL {
+		resourceRetry := util.ConvertResourcePermalinkToResourceRetryName(resourcePermalink)
+		_, err := s.etcdClient.Delete(ctx, resourceRetry)
+		if err != nil {
+			return err
+		}
+	}
+
 	_, err := s.etcdClient.Delete(ctx, resourcePermalink)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *service) GetResourceRetryCount(ctx context.Context, resourcePermalink string) (*int64, error) {
+	resourceRetry := util.ConvertResourcePermalinkToResourceRetryName(resourcePermalink)
+
+	resp, err := s.etcdClient.Get(ctx, resourceRetry)
+
+	if err != nil {
+		return nil, err
+	}
+
+	kvs := resp.Kvs
+
+	if len(kvs) == 0 {
+		return nil, fmt.Errorf("retry count not found in etcd storage")
+	}
+
+	retryCount, _ := strconv.ParseInt(string(kvs[0].Value[:]), 10, 32)
+
+	return &retryCount, nil
+}
+
+func (s *service) UpdateResourceRetryCount(ctx context.Context, resourcePermalink string, retryCount int64) error {
+	resourceRetry := util.ConvertResourcePermalinkToResourceRetryName(resourcePermalink)
+
+	_, err := s.etcdClient.Put(ctx, resourceRetry, fmt.Sprint(retryCount))
 
 	if err != nil {
 		return err
