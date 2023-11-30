@@ -129,6 +129,7 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				}); e != nil {
 					return
 				}
+				currentState = lastProbeState
 				logger.Warn(err.Error())
 			} else {
 				if lastProbeState == modelPB.Model_STATE_ERROR {
