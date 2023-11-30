@@ -120,6 +120,19 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 				return
 			}
 
+			if err := s.checkRetry(ctx, resourcePermalink); err != nil {
+				if e := s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: modelPB.Model_STATE_ERROR,
+					},
+				}); e != nil {
+					return
+				}
+				logger.Warn(err.Error())
+				return
+			}
+
 			if lastProbeState == modelPB.Model_STATE_ERROR {
 				logger.Warn(fmt.Sprintf("[Controller] %s last op errored, trigger retry", model.Name))
 			}
@@ -169,9 +182,6 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 		switch currentState {
 		case modelPB.Model_STATE_OFFLINE:
 			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
-			if err := s.checkRetry(ctx, resourcePermalink); err != nil {
-				return err
-			}
 			resp, err := s.modelPrivateClient.DeployModelAdmin(ctx, &modelPB.DeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
@@ -202,9 +212,6 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 		switch currentState {
 		case modelPB.Model_STATE_ONLINE:
 			logger.Info(fmt.Sprintf("[Controller] Moving %v from %v to %v", modelPermalink, currentState, desireState))
-			if err := s.checkRetry(ctx, resourcePermalink); err != nil {
-				return err
-			}
 			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
 				ModelPermalink: modelPermalink,
 			})
