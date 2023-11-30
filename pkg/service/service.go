@@ -139,14 +139,17 @@ func (s *service) UpdateResourceState(ctx context.Context, resource *controllerP
 }
 
 func (s *service) DeleteResourceState(ctx context.Context, resourcePermalink string) error {
-	resourceRetry := util.ConvertResourcePermalinkToResourceRetryName(resourcePermalink)
+	resourceType := strings.SplitN(resourcePermalink, "/", 4)[3]
 
-	_, err := s.etcdClient.Delete(ctx, resourceRetry)
-	if err != nil {
-		return err
+	if resourceType == util.RESOURCE_TYPE_MODEL {
+		resourceRetry := util.ConvertResourcePermalinkToResourceRetryName(resourcePermalink)
+		_, err := s.etcdClient.Delete(ctx, resourceRetry)
+		if err != nil {
+			return err
+		}
 	}
 
-	_, err = s.etcdClient.Delete(ctx, resourcePermalink)
+	_, err := s.etcdClient.Delete(ctx, resourcePermalink)
 	if err != nil {
 		return err
 	}
