@@ -6,9 +6,11 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/instill-ai/controller-model/config"
 	"github.com/instill-ai/controller-model/internal/util"
 	"github.com/instill-ai/controller-model/pkg/logger"
 
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
@@ -26,6 +28,17 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 	logger, _ := logger.GetZapLogger(ctx)
 
 	var wg sync.WaitGroup
+
+	if modelBackendResource, err := s.GetResourceState(ctx, util.ConvertServiceToResourceName(config.Config.ModelBackend.Host)); err != nil {
+		return err
+	} else if modelBackendResource.GetBackendState() != healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING {
+		return fmt.Errorf("[Controller] model-backend is not serving")
+	}
+	if tritonServerResource, err := s.GetResourceState(ctx, util.ConvertServiceToResourceName(config.Config.TritonServer.Host)); err != nil {
+		return err
+	} else if tritonServerResource.GetBackendState() != healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING {
+		return fmt.Errorf("[Controller] triton-server is not serving")
+	}
 
 	resp, err := s.modelPrivateClient.ListModelsAdmin(ctx, &modelPB.ListModelsAdminRequest{})
 
