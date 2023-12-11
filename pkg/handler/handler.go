@@ -10,7 +10,7 @@ import (
 	"github.com/instill-ai/controller-model/pkg/service"
 
 	custom_otel "github.com/instill-ai/controller-model/pkg/logger/otel"
-	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1beta"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 )
 
