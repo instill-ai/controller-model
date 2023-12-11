@@ -10,7 +10,7 @@ import (
 	"github.com/instill-ai/controller-model/internal/util"
 	"github.com/instill-ai/controller-model/pkg/logger"
 
-	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1alpha"
+	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1beta"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 )
