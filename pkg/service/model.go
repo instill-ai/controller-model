@@ -164,25 +164,19 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 	}
 
 	wg.Wait()
+	close(reconcileModelChannel)
 
-	for i := 0; i < len(models); i++ {
-		select {
-		case rModel := <-reconcileModelChannel:
-			if err = s.moveCurrentStateToDesireState(
-				ctx,
-				rModel.ModelPermalink,
-				rModel.ResourcePermalink,
-				rModel.CurrentState,
-				rModel.DesireState,
-			); err != nil {
-				logger.Error(err.Error())
-			}
-		default:
-			logger.Info(fmt.Sprintf("[Controller] %v not in a valid state for operation", models[i].Name))
+	for rModel := range reconcileModelChannel {
+		if err = s.moveCurrentStateToDesireState(
+			ctx,
+			rModel.ModelPermalink,
+			rModel.ResourcePermalink,
+			rModel.CurrentState,
+			rModel.DesireState,
+		); err != nil {
+			logger.Error(err.Error())
 		}
 	}
-
-	close(reconcileModelChannel)
 
 	return nil
 }
