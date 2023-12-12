@@ -244,6 +244,33 @@ func (s *service) moveCurrentStateToDesireState(ctx context.Context, modelPermal
 			}); err != nil {
 				return err
 			}
+		case modelPB.Model_STATE_ERROR:
+			logger.Info(fmt.Sprintf("[Controller] moving %v from %v to %v", modelPermalink, currentState, desireState))
+			resp, err := s.modelPrivateClient.UndeployModelAdmin(ctx, &modelPB.UndeployModelAdminRequest{
+				ModelPermalink: modelPermalink,
+			})
+			if err != nil {
+				if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+					ResourcePermalink: resourcePermalink,
+					State: &controllerPB.Resource_ModelState{
+						ModelState: modelPB.Model_STATE_ERROR,
+					},
+				}); err != nil {
+					return err
+				}
+				return err
+			}
+			if err = s.UpdateResourceWorkflowID(ctx, resourcePermalink, strings.Split(resp.GetOperation().GetName(), "/")[1]); err != nil {
+				return err
+			}
+			if err = s.UpdateResourceState(ctx, &controllerPB.Resource{
+				ResourcePermalink: resourcePermalink,
+				State: &controllerPB.Resource_ModelState{
+					ModelState: modelPB.Model_STATE_UNSPECIFIED,
+				},
+			}); err != nil {
+				return err
+			}
 		}
 	}
 	return err
