@@ -19,7 +19,7 @@ func (s *service) MonitorModelCache(ctx context.Context, cancel context.CancelFu
 
 	var wg sync.WaitGroup
 
-	iter := s.redisClient.Scan(ctx, 0, "instill-ai/*", 0).Iterator()
+	iter := s.redisClient.Scan(ctx, 0, "model_cache:*", 0).Iterator()
 
 	for iter.Next(ctx) {
 		wg.Add(1)
@@ -39,7 +39,7 @@ func (s *service) MonitorModelCache(ctx context.Context, cancel context.CancelFu
 			}
 
 			pathSplit := strings.Split(key, ":")
-			modelPath := config.Config.Cache.Model.CacheDir + "/" + fmt.Sprintf("%s_%s", pathSplit[0], pathSplit[1])
+			modelPath := config.Config.Cache.Model.CacheDir + "/" + fmt.Sprintf("%s_%s", pathSplit[1], pathSplit[2])
 
 			if idleTime >= retentionPeriod {
 				err := os.RemoveAll(modelPath)
