@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/longrunning/autogen/longrunningpb"
+	"github.com/redis/go-redis/v9"
 
 	etcdv3 "go.etcd.io/etcd/client/v3"
 
@@ -35,6 +36,7 @@ type Service interface {
 	DeleteResourceWorkflowID(ctx context.Context, resourcePermalink string) error
 	ProbeBackend(ctx context.Context, cancel context.CancelFunc) error
 	ProbeModels(ctx context.Context, cancel context.CancelFunc) error
+	MonitorModelCache(ctx context.Context, cancel context.CancelFunc) error
 }
 
 type service struct {
@@ -43,6 +45,7 @@ type service struct {
 	mgmtPublicClient   mgmtPB.MgmtPublicServiceClient
 	tritonClient       inferenceserver.GRPCInferenceServiceClient
 	etcdClient         etcdv3.Client
+	redisClient        *redis.Client
 }
 
 // NewService returns a new service instance
@@ -51,13 +54,15 @@ func NewService(
 	m modelPB.ModelPrivateServiceClient,
 	mg mgmtPB.MgmtPublicServiceClient,
 	t inferenceserver.GRPCInferenceServiceClient,
-	e etcdv3.Client) Service {
+	e etcdv3.Client,
+	r *redis.Client) Service {
 	return &service{
 		modelPublicClient:  mp,
 		modelPrivateClient: m,
 		mgmtPublicClient:   mg,
 		tritonClient:       t,
 		etcdClient:         e,
+		redisClient:        r,
 	}
 }
 

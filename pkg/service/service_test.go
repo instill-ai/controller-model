@@ -67,7 +67,7 @@ func TestGetResourceState(t *testing.T) {
 			Return(resp, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		resource, err := s.GetResourceState(ctx, serviceResourceName)
 
@@ -102,7 +102,7 @@ func TestGetResourceState(t *testing.T) {
 			Return(resp, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		resource, err := s.GetResourceState(ctx, modelResourceName)
 
@@ -148,7 +148,7 @@ func TestUpdateResourceState(t *testing.T) {
 			Return(&etcdv3.PutResponse{}, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		err := s.UpdateResourceState(ctx, &resource)
 
@@ -187,7 +187,7 @@ func TestUpdateResourceState(t *testing.T) {
 			Return(&etcdv3.PutResponse{}, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		err := s.UpdateResourceState(ctx, &resource)
 
@@ -226,7 +226,7 @@ func TestDeleteResourceState(t *testing.T) {
 			Return(resp, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		err := s.DeleteResourceState(ctx, serviceResourceName)
 
@@ -264,7 +264,7 @@ func TestDeleteResourceState(t *testing.T) {
 			Return(resp, nil).
 			Times(1)
 
-		s := service.NewService(nil, nil, nil, nil, mockEtcdClient)
+		s := service.NewService(nil, nil, nil, nil, mockEtcdClient, nil)
 
 		err := s.DeleteResourceState(ctx, modelResourceName)
 

@@ -17,6 +17,7 @@ dev:							## Run dev container
 	@docker run -d --rm \
 		-e DOCKER_HOST=${SOCAT_HOST}:${SOCAT_PORT} \
 		-e CFG_ETCD_PORT=${ETCD_CLIENT_PORT} \
+		-v model-repository:/model-repository \
 		-v $(PWD):/${SERVICE_NAME} \
 		-p ${SERVICE_PORT}:${SERVICE_PORT} \
 		--network instill-network \
