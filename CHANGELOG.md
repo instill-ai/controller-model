@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.8-alpha...v0.3.0-alpha) (2024-01-11)
+
+
+### Features
+
+* **cache:** add cache retention monitoring ([#36](https://github.com/instill-ai/controller-model/issues/36)) ([8b5ea4a](https://github.com/instill-ai/controller-model/commit/8b5ea4a0003f75a7cc618e6c3487c8b393fc4154))
+
 ## [0.2.8-alpha](https://github.com/instill-ai/controller-model/compare/v0.2.7-alpha...v0.2.8-alpha) (2023-12-15)
 
 
