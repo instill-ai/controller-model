@@ -19,6 +19,14 @@ modelbackend:
   https:
     cert:
     key:
+cache:
+  redis:
+    redisoptions:
+      addr: redis:6379
+  model:
+    enabled: false
+    cache_dir: /model-repository/.cache/models
+    retentionperiod: 24h
 mgmtbackend:
   host: mgmt-backend
   publicport: 8084

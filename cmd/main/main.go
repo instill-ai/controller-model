@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/redis/go-redis/v9"
 	"go.opentelemetry.io/contrib/propagators/b3"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -155,12 +156,16 @@ func main() {
 	etcdClient := external.InitEtcdServiceClient(ctx)
 	defer etcdClient.Close()
 
+	redisClient := redis.NewClient(&config.Config.Cache.Redis.RedisOptions)
+	defer redisClient.Close()
+
 	service := service.NewService(
 		modelPublicServiceClient,
 		modelPrivateServiceClient,
 		mgmtPublicServiceClient,
 		tritonClient,
 		*etcdClient,
+		redisClient,
 	)
 
 	controllerPB.RegisterControllerPrivateServiceServer(
@@ -245,6 +250,13 @@ func main() {
 			go func() {
 				defer mainWG.Done()
 				if err := service.ProbeModels(context.WithTimeout(ctx, config.Config.Server.Timeout*time.Second)); err != nil {
+					logger.Error(err.Error())
+				}
+			}()
+			mainWG.Add(1)
+			go func() {
+				defer mainWG.Done()
+				if err := service.MonitorModelCache(context.WithTimeout(ctx, config.Config.Server.Timeout*time.Second)); err != nil {
 					logger.Error(err.Error())
 				}
 			}()

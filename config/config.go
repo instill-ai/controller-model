@@ -70,6 +70,11 @@ type CacheConfig struct {
 	Redis struct {
 		RedisOptions redis.Options `koanf:"redisoptions"`
 	}
+	Model struct {
+		Enabled         bool   `koanf:"enabled"`
+		CacheDir        string `koanf:"cache_dir"`
+		RetentionPeriod string `koanf:"retentionperiod"`
+	}
 }
 
 // TritonServerConfig related to Triton server
