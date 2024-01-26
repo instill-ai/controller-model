@@ -101,10 +101,7 @@ func (s *service) GetResourceState(ctx context.Context, resourcePermalink string
 
 	stateEnumValue, _ := strconv.ParseInt(string(kvs[0].Value[:]), 10, 32)
 
-	workflowID, err := s.GetResourceWorkflowID(ctx, resourcePermalink)
-	if err != nil {
-		return nil, err
-	}
+	workflowID, _ := s.GetResourceWorkflowID(ctx, resourcePermalink)
 
 	switch resourceType {
 	case util.RESOURCE_TYPE_MODEL:
