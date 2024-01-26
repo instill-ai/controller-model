@@ -84,8 +84,8 @@ func (h *PrivateHandler) UpdateResource(ctx context.Context, req *controllerPB.U
 
 	logger, _ := logger.GetZapLogger(ctx)
 
-	if req.WorkflowId != nil {
-		err := h.service.UpdateResourceWorkflowID(ctx, req.Resource.ResourcePermalink, *req.WorkflowId)
+	if req.Resource.WorkflowId != nil {
+		err := h.service.UpdateResourceWorkflowID(ctx, req.Resource.ResourcePermalink, *req.Resource.WorkflowId)
 
 		if err != nil {
 			return nil, err
