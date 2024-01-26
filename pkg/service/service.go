@@ -101,6 +101,8 @@ func (s *service) GetResourceState(ctx context.Context, resourcePermalink string
 
 	stateEnumValue, _ := strconv.ParseInt(string(kvs[0].Value[:]), 10, 32)
 
+	workflowID, _ := s.GetResourceWorkflowID(ctx, resourcePermalink)
+
 	switch resourceType {
 	case util.RESOURCE_TYPE_MODEL:
 		return &controllerPB.Resource{
@@ -108,7 +110,8 @@ func (s *service) GetResourceState(ctx context.Context, resourcePermalink string
 			State: &controllerPB.Resource_ModelState{
 				ModelState: modelPB.Model_State(stateEnumValue),
 			},
-			Progress: nil,
+			WorkflowId: workflowID,
+			Progress:   nil,
 		}, nil
 	case util.RESOURCE_TYPE_SERVICE:
 		return &controllerPB.Resource{

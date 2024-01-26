@@ -19,7 +19,9 @@ import (
 )
 
 const serviceResourceName = "resources/name/types/services"
+const serviceResourceWorkflowID = "resources/name/types/services/workflow"
 const modelResourceName = "resources/name/types/models"
+const modelResourceWorkflowID = "resources/name/types/models/workflow"
 const modelResourceRetryName = "resources/name/types/models/retry"
 
 type Client struct {
@@ -63,6 +65,11 @@ func TestGetResourceState(t *testing.T) {
 
 		mockKV.
 			EXPECT().
+			Get(ctx, serviceResourceWorkflowID).
+			Return(resp, nil).
+			Times(1)
+		mockKV.
+			EXPECT().
 			Get(ctx, serviceResourceName).
 			Return(resp, nil).
 			Times(1)
@@ -96,6 +103,11 @@ func TestGetResourceState(t *testing.T) {
 
 		var resp *etcdv3.GetResponse
 
+		mockKV.
+			EXPECT().
+			Get(ctx, modelResourceWorkflowID).
+			Return(resp, nil).
+			Times(1)
 		mockKV.
 			EXPECT().
 			Get(ctx, modelResourceName).

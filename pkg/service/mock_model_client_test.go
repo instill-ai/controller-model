@@ -36,6 +36,46 @@ func (m *MockModelPublicServiceClient) EXPECT() *MockModelPublicServiceClientMoc
 	return m.recorder
 }
 
+// CreateOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) CreateOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.CreateOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.CreateOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.CreateOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrganizationModel indicates an expected call of CreateOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) CreateOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).CreateOrganizationModel), varargs...)
+}
+
+// CreateOrganizationModelBinaryFileUpload mocks base method.
+func (m *MockModelPublicServiceClient) CreateOrganizationModelBinaryFileUpload(arg0 context.Context, arg1 ...grpc.CallOption) (modelv1alpha.ModelPublicService_CreateOrganizationModelBinaryFileUploadClient, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CreateOrganizationModelBinaryFileUpload", varargs...)
+	ret0, _ := ret[0].(modelv1alpha.ModelPublicService_CreateOrganizationModelBinaryFileUploadClient)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateOrganizationModelBinaryFileUpload indicates an expected call of CreateOrganizationModelBinaryFileUpload.
+func (mr *MockModelPublicServiceClientMockRecorder) CreateOrganizationModelBinaryFileUpload(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrganizationModelBinaryFileUpload", reflect.TypeOf((*MockModelPublicServiceClient)(nil).CreateOrganizationModelBinaryFileUpload), varargs...)
+}
+
 // CreateUserModel mocks base method.
 func (m *MockModelPublicServiceClient) CreateUserModel(arg0 context.Context, arg1 *modelv1alpha.CreateUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.CreateUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -76,6 +116,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) CreateUserModelBinaryFileUpl
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUserModelBinaryFileUpload", reflect.TypeOf((*MockModelPublicServiceClient)(nil).CreateUserModelBinaryFileUpload), varargs...)
 }
 
+// DeleteOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) DeleteOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.DeleteOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.DeleteOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeleteOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.DeleteOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteOrganizationModel indicates an expected call of DeleteOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) DeleteOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).DeleteOrganizationModel), varargs...)
+}
+
 // DeleteUserModel mocks base method.
 func (m *MockModelPublicServiceClient) DeleteUserModel(arg0 context.Context, arg1 *modelv1alpha.DeleteUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.DeleteUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -94,6 +154,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) DeleteUserModel(arg0, arg1 i
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).DeleteUserModel), varargs...)
+}
+
+// DeployOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) DeployOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.DeployOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.DeployOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "DeployOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.DeployOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeployOrganizationModel indicates an expected call of DeployOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) DeployOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeployOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).DeployOrganizationModel), varargs...)
 }
 
 // DeployUserModel mocks base method.
@@ -154,6 +234,46 @@ func (mr *MockModelPublicServiceClientMockRecorder) GetModelOperation(arg0, arg1
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetModelOperation", reflect.TypeOf((*MockModelPublicServiceClient)(nil).GetModelOperation), varargs...)
+}
+
+// GetOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) GetOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.GetOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.GetOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.GetOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationModel indicates an expected call of GetOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) GetOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).GetOrganizationModel), varargs...)
+}
+
+// GetOrganizationModelCard mocks base method.
+func (m *MockModelPublicServiceClient) GetOrganizationModelCard(arg0 context.Context, arg1 *modelv1alpha.GetOrganizationModelCardRequest, arg2 ...grpc.CallOption) (*modelv1alpha.GetOrganizationModelCardResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "GetOrganizationModelCard", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.GetOrganizationModelCardResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrganizationModelCard indicates an expected call of GetOrganizationModelCard.
+func (mr *MockModelPublicServiceClientMockRecorder) GetOrganizationModelCard(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrganizationModelCard", reflect.TypeOf((*MockModelPublicServiceClient)(nil).GetOrganizationModelCard), varargs...)
 }
 
 // GetUserModel mocks base method.
@@ -236,6 +356,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) ListModels(arg0, arg1 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListModels", reflect.TypeOf((*MockModelPublicServiceClient)(nil).ListModels), varargs...)
 }
 
+// ListOrganizationModels mocks base method.
+func (m *MockModelPublicServiceClient) ListOrganizationModels(arg0 context.Context, arg1 *modelv1alpha.ListOrganizationModelsRequest, arg2 ...grpc.CallOption) (*modelv1alpha.ListOrganizationModelsResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "ListOrganizationModels", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.ListOrganizationModelsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrganizationModels indicates an expected call of ListOrganizationModels.
+func (mr *MockModelPublicServiceClientMockRecorder) ListOrganizationModels(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrganizationModels", reflect.TypeOf((*MockModelPublicServiceClient)(nil).ListOrganizationModels), varargs...)
+}
+
 // ListUserModels mocks base method.
 func (m *MockModelPublicServiceClient) ListUserModels(arg0 context.Context, arg1 *modelv1alpha.ListUserModelsRequest, arg2 ...grpc.CallOption) (*modelv1alpha.ListUserModelsResponse, error) {
 	m.ctrl.T.Helper()
@@ -296,6 +436,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) LookUpModel(arg0, arg1 inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LookUpModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).LookUpModel), varargs...)
 }
 
+// PublishOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) PublishOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.PublishOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.PublishOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "PublishOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.PublishOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PublishOrganizationModel indicates an expected call of PublishOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) PublishOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublishOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).PublishOrganizationModel), varargs...)
+}
+
 // PublishUserModel mocks base method.
 func (m *MockModelPublicServiceClient) PublishUserModel(arg0 context.Context, arg1 *modelv1alpha.PublishUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.PublishUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -336,6 +496,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) Readiness(arg0, arg1 interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Readiness", reflect.TypeOf((*MockModelPublicServiceClient)(nil).Readiness), varargs...)
 }
 
+// RenameOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) RenameOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.RenameOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.RenameOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RenameOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.RenameOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RenameOrganizationModel indicates an expected call of RenameOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) RenameOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).RenameOrganizationModel), varargs...)
+}
+
 // RenameUserModel mocks base method.
 func (m *MockModelPublicServiceClient) RenameUserModel(arg0 context.Context, arg1 *modelv1alpha.RenameUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.RenameUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -356,44 +536,44 @@ func (mr *MockModelPublicServiceClientMockRecorder) RenameUserModel(arg0, arg1 i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).RenameUserModel), varargs...)
 }
 
-// TestUserModel mocks base method.
-func (m *MockModelPublicServiceClient) TestUserModel(arg0 context.Context, arg1 *modelv1alpha.TestUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.TestUserModelResponse, error) {
+// TriggerOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) TriggerOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.TriggerOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.TriggerOrganizationModelResponse, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1}
 	for _, a := range arg2 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "TestUserModel", varargs...)
-	ret0, _ := ret[0].(*modelv1alpha.TestUserModelResponse)
+	ret := m.ctrl.Call(m, "TriggerOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.TriggerOrganizationModelResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TestUserModel indicates an expected call of TestUserModel.
-func (mr *MockModelPublicServiceClientMockRecorder) TestUserModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+// TriggerOrganizationModel indicates an expected call of TriggerOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) TriggerOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TestUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).TestUserModel), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TriggerOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).TriggerOrganizationModel), varargs...)
 }
 
-// TestUserModelBinaryFileUpload mocks base method.
-func (m *MockModelPublicServiceClient) TestUserModelBinaryFileUpload(arg0 context.Context, arg1 ...grpc.CallOption) (modelv1alpha.ModelPublicService_TestUserModelBinaryFileUploadClient, error) {
+// TriggerOrganizationModelBinaryFileUpload mocks base method.
+func (m *MockModelPublicServiceClient) TriggerOrganizationModelBinaryFileUpload(arg0 context.Context, arg1 ...grpc.CallOption) (modelv1alpha.ModelPublicService_TriggerOrganizationModelBinaryFileUploadClient, error) {
 	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0}
 	for _, a := range arg1 {
 		varargs = append(varargs, a)
 	}
-	ret := m.ctrl.Call(m, "TestUserModelBinaryFileUpload", varargs...)
-	ret0, _ := ret[0].(modelv1alpha.ModelPublicService_TestUserModelBinaryFileUploadClient)
+	ret := m.ctrl.Call(m, "TriggerOrganizationModelBinaryFileUpload", varargs...)
+	ret0, _ := ret[0].(modelv1alpha.ModelPublicService_TriggerOrganizationModelBinaryFileUploadClient)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TestUserModelBinaryFileUpload indicates an expected call of TestUserModelBinaryFileUpload.
-func (mr *MockModelPublicServiceClientMockRecorder) TestUserModelBinaryFileUpload(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+// TriggerOrganizationModelBinaryFileUpload indicates an expected call of TriggerOrganizationModelBinaryFileUpload.
+func (mr *MockModelPublicServiceClientMockRecorder) TriggerOrganizationModelBinaryFileUpload(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TestUserModelBinaryFileUpload", reflect.TypeOf((*MockModelPublicServiceClient)(nil).TestUserModelBinaryFileUpload), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TriggerOrganizationModelBinaryFileUpload", reflect.TypeOf((*MockModelPublicServiceClient)(nil).TriggerOrganizationModelBinaryFileUpload), varargs...)
 }
 
 // TriggerUserModel mocks base method.
@@ -436,6 +616,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) TriggerUserModelBinaryFileUp
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TriggerUserModelBinaryFileUpload", reflect.TypeOf((*MockModelPublicServiceClient)(nil).TriggerUserModelBinaryFileUpload), varargs...)
 }
 
+// UndeployOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) UndeployOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.UndeployOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.UndeployOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UndeployOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.UndeployOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UndeployOrganizationModel indicates an expected call of UndeployOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) UndeployOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeployOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UndeployOrganizationModel), varargs...)
+}
+
 // UndeployUserModel mocks base method.
 func (m *MockModelPublicServiceClient) UndeployUserModel(arg0 context.Context, arg1 *modelv1alpha.UndeployUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.UndeployUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -454,6 +654,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) UndeployUserModel(arg0, arg1
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeployUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UndeployUserModel), varargs...)
+}
+
+// UnpublishOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) UnpublishOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.UnpublishOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.UnpublishOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UnpublishOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.UnpublishOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UnpublishOrganizationModel indicates an expected call of UnpublishOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) UnpublishOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpublishOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UnpublishOrganizationModel), varargs...)
 }
 
 // UnpublishUserModel mocks base method.
@@ -476,6 +696,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) UnpublishUserModel(arg0, arg
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpublishUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UnpublishUserModel), varargs...)
 }
 
+// UpdateOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) UpdateOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.UpdateOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.UpdateOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UpdateOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.UpdateOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateOrganizationModel indicates an expected call of UpdateOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) UpdateOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UpdateOrganizationModel), varargs...)
+}
+
 // UpdateUserModel mocks base method.
 func (m *MockModelPublicServiceClient) UpdateUserModel(arg0 context.Context, arg1 *modelv1alpha.UpdateUserModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.UpdateUserModelResponse, error) {
 	m.ctrl.T.Helper()
@@ -494,6 +734,26 @@ func (mr *MockModelPublicServiceClientMockRecorder) UpdateUserModel(arg0, arg1 i
 	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1}, arg2...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).UpdateUserModel), varargs...)
+}
+
+// WatchOrganizationModel mocks base method.
+func (m *MockModelPublicServiceClient) WatchOrganizationModel(arg0 context.Context, arg1 *modelv1alpha.WatchOrganizationModelRequest, arg2 ...grpc.CallOption) (*modelv1alpha.WatchOrganizationModelResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "WatchOrganizationModel", varargs...)
+	ret0, _ := ret[0].(*modelv1alpha.WatchOrganizationModelResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// WatchOrganizationModel indicates an expected call of WatchOrganizationModel.
+func (mr *MockModelPublicServiceClientMockRecorder) WatchOrganizationModel(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WatchOrganizationModel", reflect.TypeOf((*MockModelPublicServiceClient)(nil).WatchOrganizationModel), varargs...)
 }
 
 // WatchUserModel mocks base method.
