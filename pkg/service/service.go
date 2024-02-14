@@ -17,7 +17,6 @@ import (
 	"github.com/instill-ai/controller-model/internal/util"
 	"github.com/instill-ai/controller-model/pkg/logger"
 
-	inferenceserver "github.com/instill-ai/controller-model/internal/triton"
 	healthcheckPB "github.com/instill-ai/protogen-go/common/healthcheck/v1beta"
 	mgmtPB "github.com/instill-ai/protogen-go/core/mgmt/v1beta"
 	controllerPB "github.com/instill-ai/protogen-go/model/controller/v1alpha"
@@ -43,7 +42,6 @@ type service struct {
 	modelPublicClient  modelPB.ModelPublicServiceClient
 	modelPrivateClient modelPB.ModelPrivateServiceClient
 	mgmtPublicClient   mgmtPB.MgmtPublicServiceClient
-	tritonClient       inferenceserver.GRPCInferenceServiceClient
 	etcdClient         etcdv3.Client
 	redisClient        *redis.Client
 }
@@ -53,14 +51,12 @@ func NewService(
 	mp modelPB.ModelPublicServiceClient,
 	m modelPB.ModelPrivateServiceClient,
 	mg mgmtPB.MgmtPublicServiceClient,
-	t inferenceserver.GRPCInferenceServiceClient,
 	e etcdv3.Client,
 	r *redis.Client) Service {
 	return &service{
 		modelPublicClient:  mp,
 		modelPrivateClient: m,
 		mgmtPublicClient:   mg,
-		tritonClient:       t,
 		etcdClient:         e,
 		redisClient:        r,
 	}
@@ -255,7 +251,6 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 	var backendServices = [...]string{
 		config.Config.ModelBackend.Host,
 		config.Config.MgmtBackend.Host,
-		config.Config.TritonServer.Host,
 	}
 
 	wg.Add(len(backendServices))
@@ -284,24 +279,6 @@ func (s *service) ProbeBackend(ctx context.Context, cancel context.CancelFunc) e
 					}
 				} else {
 					healthcheck = *resp.GetHealthCheckResponse()
-				}
-			case config.Config.TritonServer.Host:
-				resp, err := s.tritonClient.ServerLive(ctx, &inferenceserver.ServerLiveRequest{})
-
-				if err != nil {
-					healthcheck = healthcheckPB.HealthCheckResponse{
-						Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
-					}
-				} else {
-					if resp.GetLive() {
-						healthcheck = healthcheckPB.HealthCheckResponse{
-							Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING,
-						}
-					} else {
-						healthcheck = healthcheckPB.HealthCheckResponse{
-							Status: healthcheckPB.HealthCheckResponse_SERVING_STATUS_NOT_SERVING,
-						}
-					}
 				}
 			}
 
