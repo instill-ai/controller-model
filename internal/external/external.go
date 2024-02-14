@@ -12,7 +12,6 @@ import (
 	"github.com/instill-ai/controller-model/config"
 	"github.com/instill-ai/controller-model/pkg/logger"
 
-	inferenceserver "github.com/instill-ai/controller-model/internal/triton"
 	mgmtPB "github.com/instill-ai/protogen-go/core/mgmt/v1beta"
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	etcdv3 "go.etcd.io/etcd/client/v3"
@@ -92,20 +91,7 @@ func InitMgmtPublicServiceClient(ctx context.Context) (mgmtPB.MgmtPublicServiceC
 	return mgmtPB.NewMgmtPublicServiceClient(clientConn), clientConn
 }
 
-// InitTritonServiceClient initialises a TritonServiceClient instance
-func InitTritonServiceClient(ctx context.Context) (inferenceserver.GRPCInferenceServiceClient, *grpc.ClientConn) {
-	logger, _ := logger.GetZapLogger(ctx)
-	grpcURI := config.Config.TritonServer.GrpcURI
-	// Connect to triton grpc server
-	clientConn, err := grpc.Dial(grpcURI, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
-
-	return inferenceserver.NewGRPCInferenceServiceClient(clientConn), clientConn
-}
-
-// InitEtcdServiceClient initialises a TritonServiceClient instance
+// InitEtcdServiceClient initialises a EtcdServiceClient instance
 func InitEtcdServiceClient(ctx context.Context) *etcdv3.Client {
 	logger, _ := logger.GetZapLogger(ctx)
 

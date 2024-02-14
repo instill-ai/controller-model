@@ -25,7 +25,6 @@ type AppConfig struct {
 	Cache        CacheConfig        `koanf:"cache"`
 	ModelBackend ModelBackendConfig `koanf:"modelbackend"`
 	MgmtBackend  MgmtBackendConfig  `koanf:"mgmtbackend"`
-	TritonServer TritonServerConfig `koanf:"tritonserver"`
 	Log          LogConfig          `koanf:"log"`
 }
 
@@ -75,13 +74,6 @@ type CacheConfig struct {
 		CacheDir        string `koanf:"cache_dir"`
 		RetentionPeriod string `koanf:"retentionperiod"`
 	}
-}
-
-// TritonServerConfig related to Triton server
-type TritonServerConfig struct {
-	Host       string `koanf:"host"`
-	GrpcURI    string `koanf:"grpcuri"`
-	ModelStore string `koanf:"modelstore"`
 }
 
 // ModelBackendConfig related to model-backend

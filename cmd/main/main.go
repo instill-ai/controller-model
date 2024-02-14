@@ -150,9 +150,6 @@ func main() {
 	mgmtPublicServiceClient, mgmtPublicServiceClientConn := external.InitMgmtPublicServiceClient(ctx)
 	defer mgmtPublicServiceClientConn.Close()
 
-	tritonClient, tritonClientConn := external.InitTritonServiceClient(ctx)
-	defer tritonClientConn.Close()
-
 	etcdClient := external.InitEtcdServiceClient(ctx)
 	defer etcdClient.Close()
 
@@ -163,7 +160,6 @@ func main() {
 		modelPublicServiceClient,
 		modelPrivateServiceClient,
 		mgmtPublicServiceClient,
-		tritonClient,
 		*etcdClient,
 		redisClient,
 	)

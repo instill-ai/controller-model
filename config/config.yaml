@@ -34,10 +34,6 @@ mgmtbackend:
   https:
     cert:
     key:
-tritonserver:
-  host: triton-server
-  grpcuri: triton-server:8001
-  modelstore: /model-repository
 etcd:
   host: etcd
   port: 2379

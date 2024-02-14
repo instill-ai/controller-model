@@ -34,11 +34,6 @@ func (s *service) ProbeModels(ctx context.Context, cancel context.CancelFunc) er
 	} else if modelBackendResource.GetBackendState() != healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING {
 		return fmt.Errorf("[Controller] model-backend is not serving")
 	}
-	if tritonServerResource, err := s.GetResourceState(ctx, util.ConvertServiceToResourceName(config.Config.TritonServer.Host)); err != nil {
-		return err
-	} else if tritonServerResource.GetBackendState() != healthcheckPB.HealthCheckResponse_SERVING_STATUS_SERVING {
-		return fmt.Errorf("[Controller] triton-server is not serving")
-	}
 
 	resp, err := s.modelPrivateClient.ListModelsAdmin(ctx, &modelPB.ListModelsAdminRequest{})
 
