@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0-alpha](https://github.com/instill-ai/controller-model/compare/v0.3.1-alpha...v0.4.0-alpha) (2024-02-16)
+
+
+### Miscellaneous Chores
+
+* **release:** release v0.4.0-alpha ([95937f7](https://github.com/instill-ai/controller-model/commit/95937f778917ae89cccc4687275902d2712bfd95))
+
 ## [0.3.1-alpha](https://github.com/instill-ai/controller-model/compare/v0.3.0-alpha...v0.3.1-alpha) (2024-01-29)
 
 
